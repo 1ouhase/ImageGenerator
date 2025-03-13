@@ -1,28 +1,36 @@
 package net.iouhase.imagegenerator;
 
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public class ImageController {
     @FXML
-    private Canvas canvas;
+    private ImageView image;
 
     @FXML
     private void initialize() {
+        final int THREADS_SQRT = 2;
+        double width = 1920;
+        double height = 1080;
 
-        int scale = 2;
-        int width = 1280;
-        int height = 720;
+        WritableImage writableImage = new WritableImage((int)width, (int)height);
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+        image.setImage(writableImage);
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        for (int i = 0; i < THREADS_SQRT; i++) {
+            for (int j = 0; j < THREADS_SQRT; j++) {
+                double startX, startY;
+                double endX, endY;
+                startX = i * width / THREADS_SQRT;
+                startY = j * height / THREADS_SQRT;
+                endX = startX + width / THREADS_SQRT;
+                endY = startY + height / THREADS_SQRT;
 
-
-        for (int i = 0; i < width / scale; i++) {
-            for (int j = 0; j < height / scale; j++) {
-                gc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-                gc.fillRect(i * scale, j * scale, scale, scale);
+                Thread thread = new Thread(new DrawThread(pixelWriter, startX, startY, endX, endY));
+                thread.start();
             }
         }
     }
