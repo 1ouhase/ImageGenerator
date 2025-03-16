@@ -22,7 +22,8 @@ public class DrawThread implements Runnable {
         for (double x = startX; x < endX; x++) {
             for (double y = startY; y < endY; y++) {
                 synchronized (writer) {
-                    writer.setColor((int) x, (int) y, new Color(Math.random(), Math.random(), Math.random(), 1));
+                    var color = Math.random();
+                    writer.setColor((int) x, (int) y, new Color(color, color, color, 1));
                 }
             }
         }

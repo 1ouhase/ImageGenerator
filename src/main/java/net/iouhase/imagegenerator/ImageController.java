@@ -12,7 +12,7 @@ public class ImageController {
 
     @FXML
     private void initialize() {
-        final int THREADS_SQRT = 2;
+        final int THREADS_SQRT = 4;
         double width = 1920;
         double height = 1080;
 
